@@ -25,5 +25,6 @@ class Family_Doctor(models.Model):
     doctor = models.ForeignKey(Doctor)
 
 class DoctorInfo(models.Model):
-    doctor=models.ForeignKey(Doctor)
-    text=models.TextField()
+    doctor = models.ForeignKey(Doctor)
+    text = models.TextField()
+

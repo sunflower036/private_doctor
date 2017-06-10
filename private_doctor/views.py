@@ -15,7 +15,7 @@ def login(request):
             if compare_user:
                 request.session['user'] = user
                 request.session['pwd'] = pwd
-                return HttpResponseRedirect('/doctor')
+                return HttpResponseRedirect('/doctor/')
             else:
                 return render(request,"fail_login.html")
 
@@ -24,7 +24,7 @@ def login(request):
             if compare_user:
                 request.session['user'] = user
                 request.session['pwd'] = pwd
-                return HttpResponseRedirect('/family')
+                return HttpResponseRedirect('/family/')
             else:
                 return render(request,"fail_login.html")
     else:
@@ -39,11 +39,11 @@ def register(request):
         identity=request.POST.get("identity",None)
         if identity=="doctor":
             models.Doctor.objects.create(user=username,pwd=password,sex=sex,email=email)
-            return HttpResponseRedirect('/doctor')
+            return HttpResponseRedirect('/doctor/')
         else:
             try:
                 models.Family.objects.create(user=username,pwd=password,sex=sex,email=email)
-                return HttpResponseRedirect('/family')
+                return HttpResponseRedirect('/family/')
             except:
                 return render(request,"name_error.html")
 
@@ -64,25 +64,28 @@ def doctor(request):
     now = datetime.datetime.now()
     # delta = datetime.timedelta(days = 21)
     # now + delta
-    try:
-        if models.Doctor.objects.filter(user=request.session['user'], pwd=request.session['pwd']) :
-            df = models.Appointment.objects.filter(doctor__user=request.session['user']).all()
-            families = []
-            for record in df:
-                family = get_family(record.family.user,families)
-                if family != False:
-                    family.times.append(record.time)
-                else:
-                    families.append({'user': record.family.user, 'times':[record.time]})
+    # try:
+    if models.Doctor.objects.filter(user=request.session['user'],
+                                    pwd=request.session['pwd']):
 
-            data = {
-                "families": families
-            }
-            return render(request, 'doctor.html', data)
-        else:
-            return HttpResponseRedirect('/login')
-    except:
+        df = models.Appointment.objects.filter(doctor__user=request.session['user']).all()
+        families = []
+        for record in df:
+            family = get_family(record.family.user,families)
+            if family != False:
+                family.times.append(record.time)
+            else:
+                families.append({'user': record.family.user,
+                                 'times': [record.time]})
+
+        data = {
+            "families": families
+        }
+        return render(request, 'doctor.html', data)
+    else:
         return HttpResponseRedirect('/login')
+    # except:
+    #     return HttpResponseRedirect('/login')
 
 def get_family(user,families):
     for family in families:
@@ -110,3 +113,14 @@ def doctor_info(request):
 
 def manage(request):
     return render(request,"manage.html")
+
+
+def test(request):
+    print(request.POST)
+    data = {
+        'messages': [{
+            'time': 'asdas',
+            'family': 'asdhjkqwhjek'
+        }]
+    }
+    return render(request, "doctor.html", data)
