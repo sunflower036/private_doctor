@@ -40,6 +40,7 @@
               document.getElementById('msg').textContent = "need more " +
                 "characters";
             } else {
+              document.getElementById('submit').disabled = false;
               document.getElementById('msg').textContent = "";
             }
             event.preventDefault();
