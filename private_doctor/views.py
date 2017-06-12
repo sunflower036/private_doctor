@@ -111,7 +111,16 @@ def fail_login(request):
 
 
 def doctor_info(request):
-    return render(request, "doctor_info.html")
+    if models.Doctor.objects.filter(user=request.session['user'],
+                                        pwd=request.session['pwd']):
+        doctor = models.Doctor.objects.filter(user=request.session['user'])[0]
+        desc= doctor.text
+        if request.method=="POST":
+            text = request.POST.get("desc",None)
+            models.Doctor.objects.update(text=text)
+        return render(request, "doctor_info.html",{"desc":desc})
+    else:
+        return HttpResponseRedirect('/login')
 
 
 def manage(request):

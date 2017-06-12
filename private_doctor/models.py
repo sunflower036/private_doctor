@@ -8,12 +8,14 @@ class Doctor(models.Model):
     pwd = models.CharField(max_length=32)
     sex = models.CharField(max_length=32)
     email = models.CharField(max_length=32)
+    text = models.TextField()
 
 class Family(models.Model):
     user = models.CharField(max_length=32, primary_key=True)
     pwd = models.CharField(max_length=32)
     sex = models.CharField(max_length=32)
     email = models.CharField(max_length=32)
+    text = models.TextField()
 
 class Appointment(models.Model):
     family = models.ForeignKey(Family)
@@ -23,8 +25,4 @@ class Appointment(models.Model):
 class Family_Doctor(models.Model):
     family = models.ForeignKey(Family)
     doctor = models.ForeignKey(Doctor)
-
-class DoctorInfo(models.Model):
-    doctor = models.ForeignKey(Doctor)
-    text = models.TextField()
 

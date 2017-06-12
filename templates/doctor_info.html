@@ -11,20 +11,20 @@
           div.hidden = !div.hidden;
       }
     </script>
+
 </head>
 <body>
     <h1>doctor information</h1>
     <button onclick="editConfig()">edit</button>
-    <br>
-    <div id="div">
+    <div id="div" >
         {{ desc }}
     </div>
-    <form action="" id="form" hidden>
-        <textarea name="desc" id="text" cols="30" rows="10"
-        >
+    <form action="{% url 'doctor_info' %}" id="form" method="POST" hidden>
+        <textarea name="desc" id="text" cols="30" rows="10">
           {{ desc }}
         </textarea>
         <input type="submit" value="submit">
     </form>
+    <a href="{% url 'doctor' %}">返回</a>
 </body>
 </html>
