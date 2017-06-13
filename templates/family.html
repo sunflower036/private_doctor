@@ -5,6 +5,11 @@
     <title>family</title>
 </head>
 <body>
-
+    <h1>我的私人医生</h1>
+    <div>{{ doctor }}</div>
+    <div>{{ advice }}</div>
+    <a href="{% url 'choice' %}">选改医生</a>
+    <a href="{% url 'appointment' %}">预约医生</a>
+    <a href="{% url 'history' %}">编辑家庭健康情况</a>
 </body>
 </html>

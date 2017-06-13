@@ -16,13 +16,14 @@ class Family(models.Model):
     sex = models.CharField(max_length=32)
     email = models.CharField(max_length=32)
     text = models.TextField()
+    advice = models.TextField()
 
 class Appointment(models.Model):
     family = models.ForeignKey(Family)
     doctor = models.ForeignKey(Doctor)
     time = models.DateField()
-    
+
 class Family_Doctor(models.Model):
     family = models.ForeignKey(Family)
-    doctor = models.ForeignKey(Doctor)
+    doctor_name = models.CharField(max_length=32)
 
