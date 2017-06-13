@@ -1,3 +1,4 @@
+# coding: utf-8
 from django.shortcuts import render
 from django.shortcuts import HttpResponse, HttpResponseRedirect
 from . import models
@@ -124,7 +125,13 @@ def doctor_info(request):
 
 
 def manage(request):
-    return render(request, "manage.html")
+    if models.Doctor.objects.filter(user=request.session['user'],
+                                    pwd=request.session['pwd']):  # 检测登录
+        doctor = models.Doctor.objects.filter(user=request.session['user'])[0]
+        fds = models.Family_Doctor.objects.filter(doctor=doctor).all()
+        return render(request, "doctor_info.html", {"families": fds})
+    else:
+        return HttpResponseRedirect('/login')
 
 
 def test(request):
