@@ -39,9 +39,12 @@ def register(request):
         email = request.POST.get("email", None)
         identity = request.POST.get("identity", None)
         if identity == "doctor":
-            models.Doctor.objects.create(user=username, pwd=password,
-                                         sex=sex, email=email)
-            return HttpResponseRedirect('/doctor/')
+            try:
+                models.Doctor.objects.create(user=username, pwd=password,
+                                             sex=sex, email=email)
+                return HttpResponseRedirect('/doctor/')
+            except:
+                return render(request, "name_error.html")
         else:
             try:
                 models.Family.objects.create(user=username, pwd=password,
@@ -97,14 +100,19 @@ def get_family(user, families):
 
 
 def family(request):
-    try:
-        if models.Doctor.objects.filter(user=request.session['user'], 
-                                        pwd=request.session['pwd']):
-            return render(request, 'family.html')
+    if models.Family.objects.filter(user=request.session['user'],
+                                   pwd=request.session['pwd']):
+        family = models.Family.objects.filter(user=request.session['user'])
+        df = models.Family_Doctor.objects.filter(family__user=request.session['user'])
+        if len(df) == 0:
+            return HttpResponseRedirect('/choice/')
         else:
-            return HttpResponseRedirect('/login')
-    except:
-        return HttpResponseRedirect('/login')
+            doctor =  models.Family_Doctor.objects.filter(family__user=request.session['user'])[0]
+            advice = family[0].advice
+            return render(request, 'family.html',{"doctor":doctor.doctor_name,"advice":advice})
+            #return render(request, 'family.html')
+    else:
+       return HttpResponseRedirect('/login')
 
 
 def fail_login(request):
@@ -117,7 +125,8 @@ def doctor_info(request):
         doctor = models.Doctor.objects.filter(user=request.session['user'])[0]
         if request.method == "POST":
             text = request.POST.get("desc", None)
-            doctor.update(text=text)
+            doctor.text=text
+            doctor.save()
         desc = doctor.text
         return render(request, "doctor_info.html", {"desc": desc})
     else:
@@ -129,7 +138,7 @@ def manage(request):
                                     pwd=request.session['pwd']):  # 检测登录
         doctor = models.Doctor.objects.filter(user=request.session['user'])[0]
         fds = models.Family_Doctor.objects.filter(doctor=doctor).all()
-        return render(request, "doctor_info.html", {"families": fds})
+        return render(request, "doctor_info.html", {"fds": fds})
     else:
         return HttpResponseRedirect('/login')
 
@@ -143,3 +152,33 @@ def test(request):
         }]
     }
     return render(request, "doctor.html", data)
+
+def choice(request):
+    if models.Family.objects.filter(user=request.session['user'],
+                                        pwd=request.session['pwd']):
+        doctors=models.Doctor.objects.all()
+        if request.method=="POST":
+            user = request.POST.get("user",None)
+            doctor = models.Doctor.objects.filter(user = user)[0]
+            family = models.Family.objects.filter(user = request.session['user'])[0]
+            models.Family_Doctor.objects.create(doctor_name=doctor.user,family=family)
+            return HttpResponseRedirect('/family/')
+        return render(request,"choice.html",{"doctors":doctors})
+    else:
+        return HttpResponseRedirect('/login/')
+
+def appointment(request):
+    return render(request,"appointment.html")
+
+def history(request):
+    if models.Family.objects.filter(user=request.session['user'],
+                                    pwd=request.session['pwd']):
+        family = models.Family.objects.filter(user=request.session['user'])[0]
+        if request.method == "POST":
+            text = request.POST.get("desc", None)
+            family.text=text
+            family.save()
+        desc = family.text
+        return render(request, "history.html", {"desc": desc})
+    else:
+        return HttpResponseRedirect('/login')
