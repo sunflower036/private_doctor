@@ -1,33 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>manage</title>
-    <script type="text/javascript">
-      function editConfig() {
-          var form = document.getElementById('form');
-          var div = document.getElementById('div');
-          form.hidden = !form.hidden;
-          div.hidden = !div.hidden;
-      }
-    </script>
-
+  <meta charset="UTF-8">
+  <title>Manage</title>
 </head>
 <body>
-    <h1>Manage</h1>
-    {% for f in families %}
-        <div>{{ f.family.user }}</div>
-        <button onclick="editConfig()">edit</button>
-        <div id="div">
-            {{ desc }}
-        </div>
-        <form action="{% url 'manage' %}" id="form" method="POST" hidden>
-            <textarea name="desc" id="text" cols="30" rows="10">
-                {{ desc }}
-            </textarea>
-            <input type="submit" value="submit">
-        </form>
-    {% endfor %}
-    <a href="{% url 'doctor' %}">返回</a>
+  <h1>Manage</h1>
+  <div>
+    <table>
+      <tr>
+        <th>家庭名称</th>
+        <th>医嘱</th>
+      </tr>
+      {% for fd in fds %}
+        <tr>
+          <td>{{ fd.family.user }}</td>
+          <td>{{ fd.family.text }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <a href="{% url 'doctor' %}">返回</a>
 </body>
 </html>
