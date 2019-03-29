@@ -1,51 +1,55 @@
 <!DOCTYPE html>
-{% load staticfiles %}
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>注册</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>注册界面</title>
+    <link rel="stylesheet" href="../static/css/register.css" media="screen" type="text/css" />
+    <link rel="stylesheet" href="../static/css/font-awesome.min.css">
+    <script src='../static/js/jquery.min.js'></script>
+    <script>
+        $(document).ready(function () {
+            $("#register").toggle();
+        });
+    </script>
+    <script>
+        function jump(){
+            window.location.href="{% url 'login' %}";
+        }
+    </script>
 </head>
+
 <body>
-    <form action="{% url 'register' %}" method="post">
-        <h2 style="...">用户名</h2>
-        <input type="text" name="username" required="true"
-               placeholder="username"/>
-        <h2 style="...">密码</h2>
-        <input type="password" name="password" required="true" id="pwd"
-               onblur="detectLength()" placeholder="password"/>
-        <p id="msg"></p> <!-- to hold a message -->
-        Your sexy:
-        <select name="sex">
+
+<span href="#" class="button" id="toggle-register">注册</span>
+
+<div id="register" align="center">
+    <div id="triangle"></div>
+    <h1>register</h1>
+    <form action={% url 'register' %} method="post">
+        <span class="sexSpan"><i class="fa fa-intersex" aria-hidden="true"></i></span>
+        <select name="sex" class="sex">
             <option value="male">Male</option>
             <option value="female">Female</option>
         </select>
-        <h2 style="...">常用邮箱</h2>
-        <input type="email" name="email" required="true"
-               placeholder="your email"/>
-        <br>
-        Your Identity:
-        <select name="identity">
+        <span class="identitySpan"><i class="fa fa-user" aria-hidden="true"></i></span>
+        <select name="identity" class="identity">
             <option value="doctor">doctor</option>
             <option value="family">family</option>
         </select>
         <br>
-        <input type="submit" value="submit" id="submit">
+        <input type="text" id="acc"  placeholder="账号" name="username"/>
+        <input type="password" id="psw" placeholder="密码" name="password"/>
+        <input type="text" id="email"  placeholder="邮箱" name="email" />
+        <input type="submit" id="reg" value="注册">
+        <button type="button" id="home" onclick="jump()">首页</button>
     </form>
-    <script type="text/javascript">
-        function detectLength() {
-            var pwd = document.getElementById('pwd').value;
-            console.log(pwd);
-            if(pwd.length < 6) {
-              document.getElementById('submit').disabled = true;
-              document.getElementById('msg').textContent = "need more " +
-                "characters";
-            } else {
-              document.getElementById('submit').disabled = false;
-              document.getElementById('msg').textContent = "";
-            }
-            event.preventDefault();
-            return false;
-        }
-    </script>
+</div>
+
+<script>
+    $('#toggle-register').click(function(){
+        $('#register').toggle();
+    });
+</script>
 </body>
+
 </html>

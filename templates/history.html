@@ -13,9 +13,11 @@
     </script>
 </head>
 <body>
-    <h1>family information</h1>
-    <button onclick="editConfig()">edit</button>
+    <link href="../static/css/history.css" rel="stylesheet" type="text/css" />
+    <h1 align="center"style="color: cornflowerblue;"style="font-size:80px ;">family information</h1>
+    
     <div id="div" >
+    <button type="button" id="edit" onclick="editConfig()">edit</button>
         {{ desc }}
     </div>
     <form action="{% url 'history' %}" id="form" method="POST" hidden>
@@ -24,6 +26,6 @@
         </textarea>
         <input type="submit" value="submit">
     </form>
-    <a href="{% url 'family' %}">返回</a>
+    <a href="{% url 'search' %}" type="text/css" id="back">返回</a>
 </body>
 </html>
